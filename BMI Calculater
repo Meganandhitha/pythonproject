@@ -14,7 +14,7 @@ def get_weight():
     return weight
 
 
-def calculate_bmi(a=""):   # "a" is there because the bind function gives an argument to the function....
+def calculate_bmi(a=""):  
     print(a)
     
     try:
