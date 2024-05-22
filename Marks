@@ -1,0 +1,49 @@
+def create_result_file(file_path):
+    with open(file_path, 'w') as file:
+        file.write("Name, Register Number, Subject 1 Grade, Subject 2 Grade, Subject 3 Grade, Subject 4 Grade, Subject 5 Grade, Total Marks, Percentage\n")
+        for i in range(1, 31):
+            name = f"Student {i}"
+            reg_number = f"REG00{i}"
+            grades = ['O', 'A', 'B', 'C', 'D']
+            subject_grades = ', '.join(grades)
+            total_marks = sum([10 if grade == 'O' else 9 if grade == 'A' else 8 if grade == 'B' else 7 if grade == 'C' else 6 if grade == 'D' else 0 for grade in grades])
+            percentage = (total_marks / 50) * 100
+            file.write(f"{name}, {reg_number}, {subject_grades}, {total_marks}, {percentage:.2f}\n")
+
+def read_result_file(file_path):
+    with open(file_path, 'r') as file:
+        for line in file:
+            print(line.strip())
+
+def analyze_results(input_file, output_file):
+    categories = {
+        "90 and above": [],
+        "80 to 89.99": [],
+        "70 to 79.99": [],
+        "below 70": [],
+        "Arrear": []
+    }
+    with open(input_file, 'r') as file:
+        next(file) 
+        for line in file:
+            data = line.strip().split(', ')
+            percentage = float(data[-1])
+            if percentage >= 90:
+                categories["90 and above"].append(data[0])
+            elif 80 <= percentage < 90:
+                categories["80 to 89.99"].append(data[0])
+            elif 70 <= percentage < 80:
+                categories["70 to 79.99"].append(data[0])
+            elif percentage < 70:
+                categories["below 70"].append(data[0])
+            if 'U' in data[2:7]:
+                categories["Arrear"].append(data[0])
+    with open(output_file, 'w') as file:
+        for category, students in categories.items():
+            file.write(f"{category}:\n")
+            for student in students:
+                file.write(f"- {student}\n")
+
+create_result_file("result.txt")
+read_result_file("result.txt")
+analyze_results("result.txt", "analysis.txt")
